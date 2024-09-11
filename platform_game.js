@@ -19,10 +19,17 @@ const coins = [
 ];
 
 let score = 0;
+const coinSound = new Audio('coin-sound.mp3');
 
 function drawPlayer() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(player.x, player.y, player.width, player.height);
+}
+
+function drawScore() {
+    ctx.fillStyle = 'black';
+    ctx.font = '20px Arial';
+    ctx.fillText('Score: ' + score, 10, 20);
 }
 
 function drawCoins() {
@@ -59,6 +66,7 @@ function collectCoins() {
             player.y + player.height > coin.y) {
             coins.splice(index, 1);
             score += 10;
+            coinSound.play();
         }
     });
 }
@@ -67,6 +75,7 @@ function update() {
     clear();
     drawPlayer();
     drawCoins();
+    drawScore();
     newPos();
     collectCoins();
     requestAnimationFrame(update);
