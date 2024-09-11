@@ -50,12 +50,25 @@ function drawCoins() {
     ctx.fillStyle = 'gold';
     coins.forEach(coin => {
         ctx.fillRect(coin.x, coin.y, coin.width, coin.height);
-        coin.y += 2; // Move coins downwards
+        let onPlatform = false;
 
-        // Reset coin to top if it falls off the canvas
-        if (coin.y > canvas.height) {
-            coin.y = 0;
-            coin.x = Math.random() * (canvas.width - coin.width);
+        platforms.forEach(platform => {
+            if (coin.x < platform.x + platform.width &&
+                coin.x + coin.width > platform.x &&
+                coin.y + coin.height <= platform.y &&
+                coin.y + coin.height + 2 >= platform.y) {
+                onPlatform = true;
+            }
+        });
+
+        if (!onPlatform) {
+            coin.y += 2; // Move coins downwards
+
+            // Reset coin to top if it falls off the canvas
+            if (coin.y > canvas.height) {
+                coin.y = 0;
+                coin.x = Math.random() * (canvas.width - coin.width);
+            }
         }
     });
 }
