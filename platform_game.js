@@ -13,9 +13,9 @@ const player = {
 };
 
 const coins = [
-    { x: 200, y: 350, width: 20, height: 20 },
-    { x: 400, y: 350, width: 20, height: 20 },
-    { x: 600, y: 350, width: 20, height: 20 }
+    { x: 200, y: 0, width: 20, height: 20 },
+    { x: 400, y: 0, width: 20, height: 20 },
+    { x: 600, y: 0, width: 20, height: 20 }
 ];
 
 const platforms = [
@@ -50,6 +50,13 @@ function drawCoins() {
     ctx.fillStyle = 'gold';
     coins.forEach(coin => {
         ctx.fillRect(coin.x, coin.y, coin.width, coin.height);
+        coin.y += 2; // Move coins downwards
+
+        // Reset coin to top if it falls off the canvas
+        if (coin.y > canvas.height) {
+            coin.y = 0;
+            coin.x = Math.random() * (canvas.width - coin.width);
+        }
     });
 }
 
