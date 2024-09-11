@@ -18,12 +18,26 @@ const coins = [
     { x: 600, y: 350, width: 20, height: 20 }
 ];
 
+const platforms = [
+    { x: 0, y: 370, width: 800, height: 30 },
+    { x: 150, y: 300, width: 100, height: 10 },
+    { x: 350, y: 250, width: 100, height: 10 },
+    { x: 550, y: 200, width: 100, height: 10 }
+];
+
 let score = 0;
 const coinSound = new Audio('coin-sound.mp3');
 
 function drawPlayer() {
     ctx.fillStyle = 'blue';
     ctx.fillRect(player.x, player.y, player.width, player.height);
+}
+
+function drawPlatforms() {
+    ctx.fillStyle = 'brown';
+    platforms.forEach(platform => {
+        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+    });
 }
 
 function drawScore() {
@@ -47,11 +61,26 @@ function newPos() {
     player.x += player.dx;
     player.y += player.dy;
 
-    if (player.y + player.height < canvas.height) {
-        player.dy += 1; // gravity
-    } else {
-        player.dy = 0;
-        player.jumping = false;
+    let onPlatform = false;
+
+    platforms.forEach(platform => {
+        if (player.x < platform.x + platform.width &&
+            player.x + player.width > platform.x &&
+            player.y + player.height <= platform.y &&
+            player.y + player.height + player.dy >= platform.y) {
+            player.dy = 0;
+            player.jumping = false;
+            onPlatform = true;
+        }
+    });
+
+    if (!onPlatform) {
+        if (player.y + player.height < canvas.height) {
+            player.dy += 1; // gravity
+        } else {
+            player.dy = 0;
+            player.jumping = false;
+        }
     }
 
     if (player.x < 0) player.x = 0;
@@ -75,6 +104,7 @@ function update() {
     clear();
     drawPlayer();
     drawCoins();
+    drawPlatforms();
     drawScore();
     newPos();
     collectCoins();
